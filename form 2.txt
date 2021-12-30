@@ -1,0 +1,572 @@
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.Support.UI;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Filtramelo
+{
+    public partial class Form2 : Form
+    {
+        int ultimohecho = -1;
+        public CancellationTokenSource tokenCancel0, tokenCancel1, tokenCancel2, tokenCancel3, tokenCancel4;
+        
+
+        //Console.WriteLine($"\nTotal de numeros: {n} \t" + "Tiempo Estimado: " + Leer_Archivo.ConvertToMinutes(Convert.ToInt32(6.22 * n + 13)));
+
+        public Form2()
+        {
+            InitializeComponent();
+            for(int i=0; i< Program.NumeroDeProgramas; i++)
+            {
+                dgv_Usuarios.Rows.Add();
+            }
+            for(int i = 0; i<5; i++)
+            {
+                User.Filtros.Add(false);
+            }
+            
+        }
+
+
+        private void Close(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private async void btn_Reset_Click(int n)
+        {/*
+            this.tokenCancel = new CancellationTokenSource();
+            var token = tokenCancel.Token;
+
+            await Task.Run(() =>
+            {
+                IWebDriver driver = new FirefoxDriver();
+                driver.Manage().Window.Minimize();
+                dgv_Usuarios.Rows[n].Cells[0].Value = $"{n + 1}";
+                dgv_Usuarios.Rows[n].Cells[1].Value = "Si";
+                int posicion = 0;
+                try
+                {
+                    while (ultimohecho < User.NumeroDeUsuarios)
+                    {
+                        ultimohecho++;
+                        posicion = ultimohecho;
+                        dgv_Usuarios.Rows[n].Cells[1].Value = "Si";
+                        Program.Usuarios[posicion].Compañia = "P";
+                        Program.Usuarios[posicion].Localidad = "P";
+                        double num = Program.Usuarios[ultimohecho].Celular;
+                        driver.Url = "https://sns.ift.org.mx:8081/sns-frontend/consulta-numeracion/numeracion-geografica.xhtml";
+                        
+                        if (num > 1000000000 && num < 10000000000)
+                        {
+                            driver.FindElement(By.XPath("//*[@class='ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all']")).SendKeys(Convert.ToString(num));
+                            Thread.Sleep(4000);
+                            try//Dale Click a Buscar
+                            {
+                                driver.FindElement(By.XPath("//*[@id='FORM_myform:BTN_publicSearch']")).Click();
+                                try//Comprueba si estan disponibles la compañia y la localidad
+                                {
+                                    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+                                    _ = wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@id='FORM_myform:TBL_numberInfoTable_content']/div[7]/div[2]")));
+                                    Program.Usuarios[posicion].Compañia = driver.FindElement(By.XPath("/ html / body / div[2] / div / div[4] / div / form / div[3] / div / div / div[2] / div[7] / div[2]")).Text.ToString();
+                                    Program.Usuarios[posicion].Localidad = driver.FindElement(By.XPath("//*[@id='FORM_myform:TBL_numberInfoTable_content']/div[3]/div[2]")).Text.ToString();
+                                    Program.Usuarios[posicion].Buscado = true;
+                                }
+                                catch//Si fallo en encontrar compañia y localidad
+                                {
+                                    try//Comprueba si salio el aviso de "Numero no existe"
+                                    {
+                                        string a = driver.FindElement(By.XPath("/html/body/div[2]/div/div[4]/div/form/div[1]/div/div[1]/div/div[1]/div/ul/li/span[1]")).Text.ToString();
+                                        Program.Usuarios[posicion].Compañia = "NE";
+                                        Program.Usuarios[posicion].Localidad = "NE";
+                                    }
+                                    catch//Fallo la busqueda, volver a intentar
+                                    {
+                                        dgv_Usuarios.Rows[n].Cells[1].Value = "No";
+                                    }
+                                }
+                            }
+                            catch//No se dio click a buscar
+                            {
+                                dgv_Usuarios.Rows[n].Cells[1].Value = "No"; 
+                            }
+                        }
+                        dgv_Usuarios.Rows[n].Cells[2].Value = $"{posicion + 1}.-  " + num + "  " + Program.Usuarios[posicion].Compañia + "  " + Program.Usuarios[posicion].Localidad;
+                        if (token.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                    }
+                }
+                catch{}
+
+                driver.Quit();
+                if (posicion + 1 == Program.Usuarios.Count)
+                {
+                    User.GuardarInfo(User.NumeroDeUsuarios);
+                    User.ActualizarListas(Program.Usuarios, User.NumeroDeUsuarios);
+                    MessageBox.Show("Se completo la lista de numeros a buscar");
+                }
+                
+            },token);*/
+        }
+        private async void btn_Reset1_Click(object sender, EventArgs e)
+        {
+            int n = 0;
+            User.Filtros[n] = true;
+            this.tokenCancel0 = new CancellationTokenSource();
+            var token = tokenCancel0.Token;
+
+            await Task.Run(() =>
+            {
+                IWebDriver driver = new FirefoxDriver();
+                driver.Manage().Window.Minimize();
+                dgv_Usuarios.Rows[n].Cells[0].Value = $"{n + 1}";
+                dgv_Usuarios.Rows[n].Cells[1].Value = "Si";
+                int posicion = 0;
+                try
+                {
+                    while (ultimohecho < User.NumeroDeUsuarios)
+                    {
+                        ultimohecho++;
+                        posicion = ultimohecho;
+                        dgv_Usuarios.Rows[n].Cells[1].Value = "Si";
+                        Program.Usuarios[posicion].Compañia = "P";
+                        Program.Usuarios[posicion].Localidad = "P";
+                        double num = Program.Usuarios[ultimohecho].Celular;
+                        driver.Url = "https://sns.ift.org.mx:8081/sns-frontend/consulta-numeracion/numeracion-geografica.xhtml";
+
+                        if (num > 1000000000 && num < 10000000000)
+                        {
+                            driver.FindElement(By.XPath("//*[@class='ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all']")).SendKeys(Convert.ToString(num));
+                            Thread.Sleep(4000);
+                            try//Dale Click a Buscar
+                            {
+                                driver.FindElement(By.XPath("//*[@id='FORM_myform:BTN_publicSearch']")).Click();
+                                try//Comprueba si estan disponibles la compañia y la localidad
+                                {
+                                    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+                                    _ = wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@id='FORM_myform:TBL_numberInfoTable_content']/div[7]/div[2]")));
+                                    Program.Usuarios[posicion].Compañia = driver.FindElement(By.XPath("/ html / body / div[2] / div / div[4] / div / form / div[3] / div / div / div[2] / div[7] / div[2]")).Text.ToString();
+                                    Program.Usuarios[posicion].Localidad = driver.FindElement(By.XPath("//*[@id='FORM_myform:TBL_numberInfoTable_content']/div[3]/div[2]")).Text.ToString();
+                                    Program.Usuarios[posicion].Buscado = true;
+                                }
+                                catch//Si fallo en encontrar compañia y localidad
+                                {
+                                    try//Comprueba si salio el aviso de "Numero no existe"
+                                    {
+                                        string a = driver.FindElement(By.XPath("/html/body/div[2]/div/div[4]/div/form/div[1]/div/div[1]/div/div[1]/div/ul/li/span[1]")).Text.ToString();
+                                        Program.Usuarios[posicion].Compañia = "NE";
+                                        Program.Usuarios[posicion].Localidad = "NE";
+                                    }
+                                    catch//Fallo la busqueda, volver a intentar
+                                    {
+                                        dgv_Usuarios.Rows[n].Cells[1].Value = "No";
+                                    }
+                                }
+                            }
+                            catch//No se dio click a buscar
+                            {
+                                dgv_Usuarios.Rows[n].Cells[1].Value = "No";
+                            }
+                        }
+                        dgv_Usuarios.Rows[n].Cells[2].Value = $"{posicion + 1}.-  " + num + "  " + Program.Usuarios[posicion].Compañia + "  " + Program.Usuarios[posicion].Localidad;
+                        if (token.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                    }
+                }
+                catch { }
+
+                driver.Quit();
+                User.Filtros[n] = false;
+                if (posicion + 1 == Program.Usuarios.Count)
+                {
+                    User.GuardarInfo(User.NumeroDeUsuarios);
+                    User.ActualizarListas(Program.Usuarios, User.NumeroDeUsuarios);
+                    MessageBox.Show("Se completo la lista de numeros a buscar");
+                }
+
+            }, token);
+        }
+
+        private async void btn_Reset2_Click(object sender, EventArgs e)
+        {
+            int n = 1;
+            User.Filtros[n] = true;
+            this.tokenCancel1 = new CancellationTokenSource();
+            var token = tokenCancel1.Token;
+
+            await Task.Run(() =>
+            {
+                IWebDriver driver = new FirefoxDriver();
+                driver.Manage().Window.Minimize();
+                dgv_Usuarios.Rows[n].Cells[0].Value = $"{n + 1}";
+                dgv_Usuarios.Rows[n].Cells[1].Value = "Si";
+                int posicion = 0;
+                try
+                {
+                    while (ultimohecho < User.NumeroDeUsuarios)
+                    {
+                        ultimohecho++;
+                        posicion = ultimohecho;
+                        dgv_Usuarios.Rows[n].Cells[1].Value = "Si";
+                        Program.Usuarios[posicion].Compañia = "P";
+                        Program.Usuarios[posicion].Localidad = "P";
+                        double num = Program.Usuarios[ultimohecho].Celular;
+                        driver.Url = "https://sns.ift.org.mx:8081/sns-frontend/consulta-numeracion/numeracion-geografica.xhtml";
+
+                        if (num > 1000000000 && num < 10000000000)
+                        {
+                            driver.FindElement(By.XPath("//*[@class='ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all']")).SendKeys(Convert.ToString(num));
+                            Thread.Sleep(4000);
+                            try//Dale Click a Buscar
+                            {
+                                driver.FindElement(By.XPath("//*[@id='FORM_myform:BTN_publicSearch']")).Click();
+                                try//Comprueba si estan disponibles la compañia y la localidad
+                                {
+                                    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+                                    _ = wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@id='FORM_myform:TBL_numberInfoTable_content']/div[7]/div[2]")));
+                                    Program.Usuarios[posicion].Compañia = driver.FindElement(By.XPath("/ html / body / div[2] / div / div[4] / div / form / div[3] / div / div / div[2] / div[7] / div[2]")).Text.ToString();
+                                    Program.Usuarios[posicion].Localidad = driver.FindElement(By.XPath("//*[@id='FORM_myform:TBL_numberInfoTable_content']/div[3]/div[2]")).Text.ToString();
+                                    Program.Usuarios[posicion].Buscado = true;
+                                }
+                                catch//Si fallo en encontrar compañia y localidad
+                                {
+                                    try//Comprueba si salio el aviso de "Numero no existe"
+                                    {
+                                        string a = driver.FindElement(By.XPath("/html/body/div[2]/div/div[4]/div/form/div[1]/div/div[1]/div/div[1]/div/ul/li/span[1]")).Text.ToString();
+                                        Program.Usuarios[posicion].Compañia = "NE";
+                                        Program.Usuarios[posicion].Localidad = "NE";
+                                    }
+                                    catch//Fallo la busqueda, volver a intentar
+                                    {
+                                        dgv_Usuarios.Rows[n].Cells[1].Value = "No";
+                                    }
+                                }
+                            }
+                            catch//No se dio click a buscar
+                            {
+                                dgv_Usuarios.Rows[n].Cells[1].Value = "No";
+                            }
+                        }
+                        dgv_Usuarios.Rows[n].Cells[2].Value = $"{posicion + 1}.-  " + num + "  " + Program.Usuarios[posicion].Compañia + "  " + Program.Usuarios[posicion].Localidad;
+                        if (token.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                    }
+                }
+                catch { }
+
+                driver.Quit();
+                User.Filtros[n] = false;
+                if (posicion + 1 == Program.Usuarios.Count)
+                {
+                    User.GuardarInfo(User.NumeroDeUsuarios);
+                    User.ActualizarListas(Program.Usuarios, User.NumeroDeUsuarios);
+                    MessageBox.Show("Se completo la lista de numeros a buscar");
+                }
+
+            }, token);
+        }
+
+        private async void btn_Reset3_Click(object sender, EventArgs e)
+        {
+            int n = 2;
+            User.Filtros[n] = true;
+            this.tokenCancel2 = new CancellationTokenSource();
+            var token = tokenCancel2.Token;
+
+            await Task.Run(() =>
+            {
+                IWebDriver driver = new FirefoxDriver();
+                driver.Manage().Window.Minimize();
+                dgv_Usuarios.Rows[n].Cells[0].Value = $"{n + 1}";
+                dgv_Usuarios.Rows[n].Cells[1].Value = "Si";
+                int posicion = 0;
+                try
+                {
+                    while (ultimohecho < User.NumeroDeUsuarios)
+                    {
+                        ultimohecho++;
+                        posicion = ultimohecho;
+                        dgv_Usuarios.Rows[n].Cells[1].Value = "Si";
+                        Program.Usuarios[posicion].Compañia = "P";
+                        Program.Usuarios[posicion].Localidad = "P";
+                        double num = Program.Usuarios[ultimohecho].Celular;
+                        driver.Url = "https://sns.ift.org.mx:8081/sns-frontend/consulta-numeracion/numeracion-geografica.xhtml";
+
+                        if (num > 1000000000 && num < 10000000000)
+                        {
+                            driver.FindElement(By.XPath("//*[@class='ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all']")).SendKeys(Convert.ToString(num));
+                            Thread.Sleep(4000);
+                            try//Dale Click a Buscar
+                            {
+                                driver.FindElement(By.XPath("//*[@id='FORM_myform:BTN_publicSearch']")).Click();
+                                try//Comprueba si estan disponibles la compañia y la localidad
+                                {
+                                    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+                                    _ = wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@id='FORM_myform:TBL_numberInfoTable_content']/div[7]/div[2]")));
+                                    Program.Usuarios[posicion].Compañia = driver.FindElement(By.XPath("/ html / body / div[2] / div / div[4] / div / form / div[3] / div / div / div[2] / div[7] / div[2]")).Text.ToString();
+                                    Program.Usuarios[posicion].Localidad = driver.FindElement(By.XPath("//*[@id='FORM_myform:TBL_numberInfoTable_content']/div[3]/div[2]")).Text.ToString();
+                                    Program.Usuarios[posicion].Buscado = true;
+                                }
+                                catch//Si fallo en encontrar compañia y localidad
+                                {
+                                    try//Comprueba si salio el aviso de "Numero no existe"
+                                    {
+                                        string a = driver.FindElement(By.XPath("/html/body/div[2]/div/div[4]/div/form/div[1]/div/div[1]/div/div[1]/div/ul/li/span[1]")).Text.ToString();
+                                        Program.Usuarios[posicion].Compañia = "NE";
+                                        Program.Usuarios[posicion].Localidad = "NE";
+                                    }
+                                    catch//Fallo la busqueda, volver a intentar
+                                    {
+                                        dgv_Usuarios.Rows[n].Cells[1].Value = "No";
+                                    }
+                                }
+                            }
+                            catch//No se dio click a buscar
+                            {
+                                dgv_Usuarios.Rows[n].Cells[1].Value = "No";
+                            }
+                        }
+                        dgv_Usuarios.Rows[n].Cells[2].Value = $"{posicion + 1}.-  " + num + "  " + Program.Usuarios[posicion].Compañia + "  " + Program.Usuarios[posicion].Localidad;
+                        if (token.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                    }
+                }
+                catch { }
+
+                driver.Quit();
+                User.Filtros[n] = false;
+                if (posicion + 1 == Program.Usuarios.Count)
+                {
+                    User.GuardarInfo(User.NumeroDeUsuarios);
+                    User.ActualizarListas(Program.Usuarios, User.NumeroDeUsuarios);
+                    MessageBox.Show("Se completo la lista de numeros a buscar");
+                }
+
+            }, token);
+        }
+
+        private async void btn_Reset4_Click(object sender, EventArgs e)
+        {
+            int n = 3;
+            User.Filtros[n] = true;
+            this.tokenCancel3 = new CancellationTokenSource();
+            var token = tokenCancel3.Token;
+
+            await Task.Run(() =>
+            {
+                IWebDriver driver = new FirefoxDriver();
+                driver.Manage().Window.Minimize();
+                dgv_Usuarios.Rows[n].Cells[0].Value = $"{n + 1}";
+                dgv_Usuarios.Rows[n].Cells[1].Value = "Si";
+                int posicion = 0;
+                try
+                {
+                    while (ultimohecho < User.NumeroDeUsuarios)
+                    {
+                        ultimohecho++;
+                        posicion = ultimohecho;
+                        dgv_Usuarios.Rows[n].Cells[1].Value = "Si";
+                        Program.Usuarios[posicion].Compañia = "P";
+                        Program.Usuarios[posicion].Localidad = "P";
+                        double num = Program.Usuarios[ultimohecho].Celular;
+                        driver.Url = "https://sns.ift.org.mx:8081/sns-frontend/consulta-numeracion/numeracion-geografica.xhtml";
+
+                        if (num > 1000000000 && num < 10000000000)
+                        {
+                            driver.FindElement(By.XPath("//*[@class='ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all']")).SendKeys(Convert.ToString(num));
+                            Thread.Sleep(4000);
+                            try//Dale Click a Buscar
+                            {
+                                driver.FindElement(By.XPath("//*[@id='FORM_myform:BTN_publicSearch']")).Click();
+                                try//Comprueba si estan disponibles la compañia y la localidad
+                                {
+                                    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+                                    _ = wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@id='FORM_myform:TBL_numberInfoTable_content']/div[7]/div[2]")));
+                                    Program.Usuarios[posicion].Compañia = driver.FindElement(By.XPath("/ html / body / div[2] / div / div[4] / div / form / div[3] / div / div / div[2] / div[7] / div[2]")).Text.ToString();
+                                    Program.Usuarios[posicion].Localidad = driver.FindElement(By.XPath("//*[@id='FORM_myform:TBL_numberInfoTable_content']/div[3]/div[2]")).Text.ToString();
+                                    Program.Usuarios[posicion].Buscado = true;
+                                }
+                                catch//Si fallo en encontrar compañia y localidad
+                                {
+                                    try//Comprueba si salio el aviso de "Numero no existe"
+                                    {
+                                        string a = driver.FindElement(By.XPath("/html/body/div[2]/div/div[4]/div/form/div[1]/div/div[1]/div/div[1]/div/ul/li/span[1]")).Text.ToString();
+                                        Program.Usuarios[posicion].Compañia = "NE";
+                                        Program.Usuarios[posicion].Localidad = "NE";
+                                    }
+                                    catch//Fallo la busqueda, volver a intentar
+                                    {
+                                        dgv_Usuarios.Rows[n].Cells[1].Value = "No";
+                                    }
+                                }
+                            }
+                            catch//No se dio click a buscar
+                            {
+                                dgv_Usuarios.Rows[n].Cells[1].Value = "No";
+                            }
+                        }
+                        dgv_Usuarios.Rows[n].Cells[2].Value = $"{posicion + 1}.-  " + num + "  " + Program.Usuarios[posicion].Compañia + "  " + Program.Usuarios[posicion].Localidad;
+                        if (token.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                    }
+                }
+                catch { }
+
+                driver.Quit();
+                User.Filtros[n] = false;
+                if (posicion + 1 == Program.Usuarios.Count)
+                {
+                    User.GuardarInfo(User.NumeroDeUsuarios);
+                    User.ActualizarListas(Program.Usuarios, User.NumeroDeUsuarios);
+                    MessageBox.Show("Se completo la lista de numeros a buscar");
+                }
+
+            }, token);
+        }
+
+        private async void btn_Reset5_Click(object sender, EventArgs e)
+        {
+            int n = 4;
+            User.Filtros[n] = true;
+            this.tokenCancel4 = new CancellationTokenSource();
+            var token = tokenCancel4.Token;
+
+            await Task.Run(() =>
+            {
+                IWebDriver driver = new FirefoxDriver();
+                driver.Manage().Window.Minimize();
+                dgv_Usuarios.Rows[n].Cells[0].Value = $"{n + 1}";
+                dgv_Usuarios.Rows[n].Cells[1].Value = "Si";
+                int posicion = 0;
+                try
+                {
+                    while (ultimohecho < User.NumeroDeUsuarios)
+                    {
+                        ultimohecho++;
+                        posicion = ultimohecho;
+                        dgv_Usuarios.Rows[n].Cells[1].Value = "Si";
+                        Program.Usuarios[posicion].Compañia = "P";
+                        Program.Usuarios[posicion].Localidad = "P";
+                        double num = Program.Usuarios[ultimohecho].Celular;
+                        driver.Url = "https://sns.ift.org.mx:8081/sns-frontend/consulta-numeracion/numeracion-geografica.xhtml";
+
+                        if (num > 1000000000 && num < 10000000000)
+                        {
+                            driver.FindElement(By.XPath("//*[@class='ui-inputfield ui-inputtext ui-widget ui-state-default ui-corner-all']")).SendKeys(Convert.ToString(num));
+                            Thread.Sleep(4000);
+                            try//Dale Click a Buscar
+                            {
+                                driver.FindElement(By.XPath("//*[@id='FORM_myform:BTN_publicSearch']")).Click();
+                                try//Comprueba si estan disponibles la compañia y la localidad
+                                {
+                                    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+                                    _ = wait.Until(ExpectedConditions.ElementExists(By.XPath("//*[@id='FORM_myform:TBL_numberInfoTable_content']/div[7]/div[2]")));
+                                    Program.Usuarios[posicion].Compañia = driver.FindElement(By.XPath("/ html / body / div[2] / div / div[4] / div / form / div[3] / div / div / div[2] / div[7] / div[2]")).Text.ToString();
+                                    Program.Usuarios[posicion].Localidad = driver.FindElement(By.XPath("//*[@id='FORM_myform:TBL_numberInfoTable_content']/div[3]/div[2]")).Text.ToString();
+                                    Program.Usuarios[posicion].Buscado = true;
+                                }
+                                catch//Si fallo en encontrar compañia y localidad
+                                {
+                                    try//Comprueba si salio el aviso de "Numero no existe"
+                                    {
+                                        string a = driver.FindElement(By.XPath("/html/body/div[2]/div/div[4]/div/form/div[1]/div/div[1]/div/div[1]/div/ul/li/span[1]")).Text.ToString();
+                                        Program.Usuarios[posicion].Compañia = "NE";
+                                        Program.Usuarios[posicion].Localidad = "NE";
+                                    }
+                                    catch//Fallo la busqueda, volver a intentar
+                                    {
+                                        dgv_Usuarios.Rows[n].Cells[1].Value = "No";
+                                    }
+                                }
+                            }
+                            catch//No se dio click a buscar
+                            {
+                                dgv_Usuarios.Rows[n].Cells[1].Value = "No";
+                            }
+                        }
+                        dgv_Usuarios.Rows[n].Cells[2].Value = $"{posicion + 1}.-  " + num + "  " + Program.Usuarios[posicion].Compañia + "  " + Program.Usuarios[posicion].Localidad;
+                        if (token.IsCancellationRequested)
+                        {
+                            break;
+                        }
+                    }
+                }
+                catch { }
+
+                driver.Quit();
+                User.Filtros[n] = false;
+                if (posicion + 1 == Program.Usuarios.Count)
+                {
+                    User.GuardarInfo(User.NumeroDeUsuarios);
+                    User.ActualizarListas(Program.Usuarios, User.NumeroDeUsuarios);
+                    MessageBox.Show("Se completo la lista de numeros a buscar");
+                }
+
+            }, token);
+        }
+
+        private async void btn_SaveAndQui_Click(object sender, EventArgs e)
+        {
+            await Task.Run(() =>
+            {
+                if (User.Filtros[0]==true)
+                {
+                    this.tokenCancel0.Cancel();
+                }
+                if (User.Filtros[1] == true)
+                {
+                    this.tokenCancel1.Cancel();
+                }
+                if (User.Filtros[2] == true)
+                {
+                    this.tokenCancel2.Cancel();
+                }
+                if (User.Filtros[3] == true)
+                {
+                    this.tokenCancel3.Cancel();
+                }
+                if (User.Filtros[4] == true)
+                {
+                    this.tokenCancel4.Cancel();
+                }
+                int Buscados = User.GuardarYSalir();
+                //if(Buscados>-1 && Buscados < 5) { Buscados = 5; }
+                if (Buscados == -1)
+                {
+                    MessageBox.Show("Algo salio mal al guardar los datos");
+                }
+                else
+                {
+                    User.ActualizarListas(Program.Usuarios, Buscados);
+                    MessageBox.Show("Los datos se han guardado de forma exitosa");
+                }
+                while(User.Filtros[0]==false && User.Filtros[1] == false && User.Filtros[2] == false && User.Filtros[3] == false && User.Filtros[4] == false)
+                {
+
+                    Application.Exit();
+                }
+            });
+            
+        }
+    }
+}
